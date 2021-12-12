@@ -258,9 +258,13 @@ int Parser::applyOption(Option& opt, int argc, const char** argv) {
 			}
 			opt.as<float>() = atof(argParam);
 			return 1;
+		case Option::Type::PathExisting:
+			if(!checkExistsReadable(argParam)) {
+				CLI_LOG_ERROR("error: invalid path \"%s\" specified for option -%c/--%s.  Path must point to an existing, readable file\n", argParam, opt.shortName, opt.longName);
+				return -1;
+			}
 		case Option::Type::String:
 		case Option::Type::Path:
-		case Option::Type::PathExisting:
 			opt.as<const char*>() = argParam;
 			return 1;
 	}
